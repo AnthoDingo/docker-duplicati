@@ -30,10 +30,11 @@ fi
 
 if [ -z "$1" ]; then
     if [ ! -n "$DUPLICATI_PASS" ]; then
-      echo "ERROR- DUPLICATI_PASS must be defined"
-      exit 1
+    	echo "DANGER- DUPLICATI_PASS must be defined"
+		exec mono /app/Duplicati.Server.exe --webservice-port=8200 --webservice-interface=*
+	else
+		exec mono /app/Duplicati.Server.exe --webservice-port=8200 --webservice-interface=* --webservice-password=${DUPLICATI_PASS}
     fi
-	exec mono /app/Duplicati.Server.exe --webservice-port=8200 --webservice-interface=* --webservice-password=${DUPLICATI_PASS} --webservice-sslcertificatefile=${DUPLICATI_CERT} --webservice-sslcertificatepassword=${DUPLICATI_CERT_PASS}
 else
 	$DUPLICATI_CMD $@
 	if [ "$?" -eq 100 ] && [ -n "$ENABLE_AUTO_REPAIR" ]; then
